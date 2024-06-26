@@ -5,7 +5,6 @@
 
 <div align="center">
 
-<a href='https://sqllinguist.streamlit.app/'><img src="images/Screenshot1.png" alt="SQL Linguist" height=300></img></a>
 <a href='https://sqllinguist.streamlit.app/'><img src="/images/Screenshot1.png" alt="SQL Linguist" height=300></img></a>
 <br></br>
 
