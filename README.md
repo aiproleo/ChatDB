@@ -5,8 +5,8 @@
 
 <div align="center">
 
-<a href='https://sqllinguist.streamlit.app/'>
-<img src="SQLinguist/images/Screenshot1.png" alt="SQL Linguist" height=300></img></a>
+<a href='https://sqllinguist.streamlit.app/'><img src="images/Screenshot1.png" alt="SQL Linguist" height=300></img></a>
+<a href='https://sqllinguist.streamlit.app/'><img src="/images/Screenshot1.png" alt="SQL Linguist" height=300></img></a>
 <br></br>
 
 [![python](https://img.shields.io/badge/Python-3.12-3776AB.svg?style=flat&logo=python&logoColor=white)](https://www.python.org)
@@ -29,26 +29,6 @@ The AI-powered solution enables customers to integrate their specialized knowled
 - [Intuitive User Interface](#architecture)
 
 You will get Unlock Your Personalized AI Assistant Effortlessly: Scrape, Upload, and Go.
-
-> [!WARNING]  
-> **Website Scraping Policy**
-> 
-> This project utilizes scraping techniques to gather data from your SQL Database using standard way (no special security technology applied). It's important to note that don't use this app on sensitve database.
->
-> This project is not about SQL Query for illegal purposes. Make sure you have permission before extracting content. 
-
-> **Before using this project**
->
-> Take the time to carefully read and understand the policies of your organization's database policy. 
->
-> **Comply with Policies** 
->
->Ensure that you comply with the database policies of each request. Violating these policies could lead to consequences such as account restrictions, IP bans, or legal action.
-
-> [!NOTE] 
-> **Disclaimer**
-> 
->This project is provided for general-purpose use, and we do not take responsibility for any consequences resulting from the misuse of techniques. Users are solely responsible for ensuring compliance with policies and any associated risks.
 
 # Overview
 
@@ -133,3 +113,24 @@ pip install -r requirements.txt
 - https://share.streamlit.io/
 - https://www.datastax.com/
 - https://ai2sql.io/
+
+
+> [!WARNING]  
+> **Website Scraping Policy**
+> 
+> This project utilizes scraping techniques to gather data from your SQL Database using standard way (no special security technology applied). It's important to note that don't use this app on sensitve database.
+>
+> This project is not about SQL Query for illegal purposes. Make sure you have permission before extracting content. 
+
+> **Before using this project**
+>
+> Take the time to carefully read and understand the policies of your organization's database policy. 
+>
+> **Comply with Policies** 
+>
+>Ensure that you comply with the database policies of each request. Violating these policies could lead to consequences such as account restrictions, IP bans, or legal action.
+
+> [!NOTE] 
+> **Disclaimer**
+> 
+>This project is provided for general-purpose use, and we do not take responsibility for any consequences resulting from the misuse of techniques. Users are solely responsible for ensuring compliance with policies and any associated risks.
