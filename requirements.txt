@@ -14,7 +14,7 @@ Languages==1.0.0
 pandas==2.2.2
 pandas-profiling==3.2.0
 psycopg2
-psycopg2-binary
+# psycopg2-binary
 streamlit
 streamlit-camera-input-live==0.2.0
 streamlit-card==1.0.0
