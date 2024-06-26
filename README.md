@@ -5,7 +5,7 @@
 
 <div align="center">
 
-<a href='https://sqllinguist.streamlit.app/'><img src="/images/Screenshot1.png" alt="SQL Linguist" height=300></img></a>
+<a href='https://sqllinguist.streamlit.app/'><img src="/images/Screenshot1.png" alt="SQL Linguist" width=full></img></a>
 <br></br>
 
 [![python](https://img.shields.io/badge/Python-3.12-3776AB.svg?style=flat&logo=python&logoColor=white)](https://www.python.org)
