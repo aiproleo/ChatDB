@@ -1,57 +1,70 @@
-from langchain_core.prompts import ChatPromptTemplate
-from langchain_core.messages import SystemMessage
-from langchain_core.prompts import HumanMessagePromptTemplate
+# llm_handler.py
+import streamlit as st
+
+import os
 from langchain_openai import OpenAI, ChatOpenAI, OpenAIEmbeddings
-import pandas as pd
-import psycopg2
+
+from . import llm_prompt_engineer
 
 
 class LLMHandler:
 
+    def __init__(self):
+        self.api_key = os.getenv("OPENAI_API_KEY")
+        self.llm = OpenAI(openai_api_key=self.api_key)
+        self.chat_llm = ChatOpenAI(openai_api_key=self.api_key, temperature=0.4)
+        self.embeddings = OpenAIEmbeddings(openai_api_key=self.api_key)
+        self.table_info = st.session_state.DB_SCHEMA
+        self.data_home = st.session_state.DATA_HOME
 
-    def __init__(self, api_key):
-        self.llm = OpenAI(openai_api_key=api_key)
-        self.chat_llm = ChatOpenAI(openai_api_key=api_key, temperature=0.4)
-        self.embeddings = OpenAIEmbeddings(openai_api_key=api_key)
+    def get_response_from_llm(self, query):
+            """
+                :param query:
+                :param unique_id:
+                :param db_uri:
+                :return:
+            """
+            content = llm_prompt_engineer.sql_based_on_tables(query, self.chat_llm)
+            return content
+# ^PostgreSQL  --------------------------------------------------------------------------------------------- >vector>
 
+    # def schema_or_sql(self, query):
+    #     template = ChatPromptTemplate.from_messages(
+    #         [
+    #             SystemMessage(
+    #                 content=(
+    #                     f"In the text given text user is asking a question about database "
+    #                     f"Figure out whether user wants information about database schema or wants to write a SQL query"
+    #                     f"Answer 'schema' if user wants information about database schema and 'sql' if user wants to write a SQL query"
+    #                 )
+    #             ),
+    #             HumanMessagePromptTemplate.from_template("{text}"),
+    #         ]
+    #     )
+    #     answer = self.chat_llm(template.format_messages(text=query))
+    #     return answer.content
 
-    def generate_template_for_sql(self, query, table_info, db_uri):
-        template = ChatPromptTemplate.from_messages(
-            [
-                SystemMessage(
-                    content=(
-                        f"You are an assistant that can write complicated SQL Queries."
-                        f"Given the text below, write a SQL query that answers the user's question."
-                        f"DB connection string is {db_uri}"
-                        f"Here is a detailed description of the table(s): "
-                        f"{table_info}"
-                        "Prepend and append the SQL query with three backticks '```'"
-                    )
-                ),
-                HumanMessagePromptTemplate.from_template("{text}"),
-            ]
-        )
-        answer = self.chat_llm(template.format_messages(text=query))
-        return answer.content
+    def get_response_from_llm_vector(self, query):
+        # schema_or_sql = self.schema_or_sql(query)
+        # if schema_or_sql == "dbschema":
+        #     return llm_prompt_engineer.sql_for_schema(self.chat_llm, query)
+        # else:
+        vectordb = st.session_state.VECTOR_EMBEDDINGS
+        retriever = vectordb.as_retriever()
+        docs = retriever.get_relevant_documents(query)
 
+        relevant_tables = []
+        relevant_tables_and_columns = []
 
-    def get_the_output_from_llm(self, query, unique_id, db_uri):
-        filename_t = f'data/tables_{unique_id}.csv'
-        df = pd.read_csv(filename_t)
-        table_info = ''
-        for table in df['table_name']:
-            table_info += f'Information about table {table}:\n'
-            table_info += df[df['table_name'] == table].to_string(index=False) + '\n\n\n'
-        return self.generate_template_for_sql(query, table_info, db_uri)
+        for doc in docs:
+            table_name, column_name, data_type = doc.page_content.split("\n")
+            table_name = table_name.split(":")[1].strip()
+            relevant_tables.append(table_name)
+            column_name = column_name.split(":")[1].strip()
+            data_type = data_type.split(":")[1].strip()
+            relevant_tables_and_columns.append((table_name, column_name, data_type))
 
-    
-    def execute_the_solution(self, solution, db_uri):
-        connection = psycopg2.connect(db_uri)
-        cursor = connection.cursor()
-        _, final_query, _ = solution.split("```")
-        final_query = final_query.strip('sql')
-        cursor.execute(final_query)
-        result = cursor.fetchall()
-        cursor.close()
-        connection.close()
-        return str(result)
+        tables = ",".join(relevant_tables)
+        table_info = st.session_state.DB_SCHEMA
+
+        return llm_prompt_engineer.sql_for_vector(query, relevant_tables, table_info, self.chat_llm)
