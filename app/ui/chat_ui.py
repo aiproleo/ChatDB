@@ -23,13 +23,58 @@ import streamlit as st
 
 
 class ChatUI:
+    """
+       A class to represent the chat user interface for handling messages
+       and interacting with the database and language model handlers.
 
+       Attributes:
+       ----------
+       db_handler : object
+           The database handler object to interact with the database.
+       llm_handler : object
+           The language model handler object to interact with the language model.
+       vector_or_others : str
+           A string indicating whether to use vector-based responses or other types.
+
+       Methods:
+       -------
+       send_message(message: str) -> dict:
+           Processes the input message and returns the response.
+
+       run():
+           Runs the chat UI, displaying messages and handling user input.
+       """
     def __init__(self, db_handler, llm_handler, vector_or_others):
+        """
+        Constructs all the necessary attributes for the ChatUI object.
+
+        Parameters:
+        ----------
+        db_handler : object
+            The database handler object to interact with the database.
+        llm_handler : object
+            The language model handler object to interact with the language model.
+        vector_or_others : str
+            A string indicating whether to use vector-based responses or other types.
+        """
         self.db_handler = db_handler
         self.llm_handler = llm_handler
         self.vector_or_others = vector_or_others
 
     def send_message(self, message):
+        """
+        Processes the input message and returns the response.
+
+        Parameters:
+        ----------
+        message : str
+            The message to be processed.
+
+        Returns:
+        -------
+        dict:
+            A dictionary containing the response message and the result of executing the SQL.
+        """
         if self.vector_or_others == 'vector':
             print('vector')
             respond_contents = self.llm_handler.get_response_from_llm_vector(message)
@@ -37,11 +82,16 @@ class ChatUI:
             respond_contents = self.llm_handler.get_response_from_llm(message)
 
         result = self.db_handler.execute_sql(respond_contents)
+
+
         result = result.replace("),", "),  \n")
 
         return {"message": respond_contents + "\n\n ###### Result: ###### \n\n" + result}
 
     def run(self):
+        """
+        Runs the chat UI, displaying messages and handling user input.
+        """
         for message in st.session_state.messages:
             with st.chat_message(message["role"]):
                 st.markdown(message["content"])

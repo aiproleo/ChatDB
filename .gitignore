@@ -3,7 +3,7 @@ assistant.json
 .env
 .venv
 *.csv
-
+*.bin
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

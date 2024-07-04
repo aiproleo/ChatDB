@@ -24,8 +24,10 @@ from app import (
 
 if __name__ == "__main__":
 
-    db_handler = db_handler.DatabaseHandler()   # init: session_state add uri, with save() get unique_id.
-    llm_handler = llm_handler.LLMHandler()      # Initialize the language model handler with the OpenAI API key
-    app = chat_ui.ChatUI(db_handler, llm_handler, 'others')   # Create an instance of the Streamlit UI and pass the handlers to it
+    db_handler = db_handler.DatabaseHandler()   # initialize database handler
+    llm_handler = llm_handler.LLMHandler()      # initialize the language model handler with the OpenAI API key
+
+    # Create an instance of the Streamlit UI and pass database and LLM handlers to it
+    app = chat_ui.ChatUI(db_handler, llm_handler, 'others') # others means no vector
 
     app.run()   # Run the Streamlit application

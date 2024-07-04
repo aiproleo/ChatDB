@@ -8,8 +8,37 @@ from . import llm_prompt_engineer
 
 
 class LLMHandler:
+    """
+        A class to handle interactions with the OpenAI language model, including
+        generating responses based on SQL queries and vector embeddings.
 
+        Attributes:
+        ----------
+        api_key : str
+            The API key for accessing OpenAI services.
+        llm : OpenAI
+            An instance of the OpenAI language model.
+        chat_llm : ChatOpenAI
+            An instance of the OpenAI chat model with specified temperature.
+        embeddings : OpenAIEmbeddings
+            An instance of OpenAI embeddings for vector-based operations.
+        table_info : str
+            Information about the database schema.
+        data_home : str
+            The home directory for data storage.
+
+        Methods:
+        -------
+        get_response_from_llm(query: str) -> str:
+            Generates a response based on the provided SQL query using the language model.
+
+        get_response_from_llm_vector(query: str) -> str:
+            Generates a response based on the provided SQL query using vector embeddings to retrieve relevant documents.
+        """
     def __init__(self):
+        """
+        Constructs all the necessary attributes for the LLMHandler object.
+        """
         self.api_key = os.getenv("OPENAI_API_KEY")
         self.llm = OpenAI(openai_api_key=self.api_key)
         self.chat_llm = ChatOpenAI(openai_api_key=self.api_key, temperature=0.4)
@@ -18,37 +47,39 @@ class LLMHandler:
         self.data_home = st.session_state.DATA_HOME
 
     def get_response_from_llm(self, query):
-            """
-                :param query:
-                :param unique_id:
-                :param db_uri:
-                :return:
-            """
-            content = llm_prompt_engineer.sql_based_on_tables(query, self.chat_llm)
-            return content
+        """
+        Generates a response based on the provided SQL query using the language model.
+
+        Parameters:
+        ----------
+        query : str
+            The SQL query to be processed.
+
+        Returns:
+        -------
+        str:
+            The generated response content.
+        """
+
+        content = llm_prompt_engineer.sql_based_on_tables(query, self.chat_llm)
+        return content
 # ^PostgreSQL  --------------------------------------------------------------------------------------------- >vector>
 
-    # def schema_or_sql(self, query):
-    #     template = ChatPromptTemplate.from_messages(
-    #         [
-    #             SystemMessage(
-    #                 content=(
-    #                     f"In the text given text user is asking a question about database "
-    #                     f"Figure out whether user wants information about database schema or wants to write a SQL query"
-    #                     f"Answer 'schema' if user wants information about database schema and 'sql' if user wants to write a SQL query"
-    #                 )
-    #             ),
-    #             HumanMessagePromptTemplate.from_template("{text}"),
-    #         ]
-    #     )
-    #     answer = self.chat_llm(template.format_messages(text=query))
-    #     return answer.content
-
     def get_response_from_llm_vector(self, query):
-        # schema_or_sql = self.schema_or_sql(query)
-        # if schema_or_sql == "dbschema":
-        #     return llm_prompt_engineer.sql_for_schema(self.chat_llm, query)
-        # else:
+        """
+        Generates a response based on the provided SQL query using vector embeddings
+        to retrieve relevant documents.
+
+        Parameters:
+        ----------
+        query : str
+            The SQL query to be processed.
+
+        Returns:
+        -------
+        str:
+            The generated response content based on vector embeddings.
+        """
         vectordb = st.session_state.VECTOR_EMBEDDINGS
         retriever = vectordb.as_retriever()
         docs = retriever.get_relevant_documents(query)
