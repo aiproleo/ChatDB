@@ -91,7 +91,7 @@ class DatabaseHandler:
         try:
             tables_and_columns = self.get_basic_table_details()  # Fetch table details
             df = pd.DataFrame(tables_and_columns, columns=['table_name', 'column_name', 'data_type'])
-            # df.to_csv(st.session_state.TABLES_COLUMNS_CSV, index=False)  # Save details to CSV file
+            df.to_csv('./data/db/TABLES_COLUMNS.CSV', index=False)  # Save details to CSV file
             table_info = ''
             for table in df['table_name']:
                 table_info += f'Information about table {table}:\n'

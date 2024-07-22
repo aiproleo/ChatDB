@@ -2,4 +2,4 @@
 from .ui import chat_ui
 from .db import db_handler
 from .utils import global_initialization
-from .llm import llm_handler
+from .llm import llm_handler, llm_vector_handler

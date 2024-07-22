@@ -53,16 +53,8 @@ def session_init():
         st.session_state.DATA_HOME = []
         st.session_state.DATA_HOME = 'data/'
 
-    # Initialize DB_SCHEMA and VECTOR_EMBEDDINGS in session state
+    # Initialize DB_SCHEMA in session state
     if "DB_SCHEMA" not in st.session_state:
         st.session_state.DB_SCHEMA = []
         table_info: str = db_handler.DatabaseHandler().get_db_schema()
-
-        # Save the document to the vector database
-        document = Document(page_content=table_info)
-        embeddings = OpenAIEmbeddings(openai_api_key=os.getenv("OPENAI_API_KEY"))
-        vectordb = Chroma(embedding_function=embeddings, persist_directory='data/chroma')
-        vectordb.add_documents([document])
-
         st.session_state.DB_SCHEMA = table_info
-        st.session_state.VECTOR_EMBEDDINGS = vectordb
